@@ -1,0 +1,51 @@
+.top {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #FFFFFF;
+	text-decoration: none;
+	background-color: #990000;
+
+}
+.sub {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #FFFFFF;
+	text-decoration: none;
+	background-color: #FF6600;
+
+}
+.footer {
+
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #FFFFFF;
+	text-decoration: none;
+	background-color: #990000;
+}
+.green {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #009900;
+	font-weight: bold;
+
+}
+.red {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #FF3333;
+	font-weight: bold;
+
+}
+.grey {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #333333;
+	font-weight: bold;
+
+}
+.BGgrey {
+	background-color: #FFFFFF;
+}
