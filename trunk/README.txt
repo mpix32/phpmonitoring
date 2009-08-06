@@ -44,7 +44,7 @@ Setup crontab for monitor jobs.
 Add these lines to it - this assumes same install dir and that you want to log to /var/log.
 
 	0 0 * * * rm -f /var/log/phpmonitoring.log >/dev/null 2>&1
-	* * * * * /var/www/html/phpmonitoring/phpMonitorCron.php >> /var/log/phpMonitor.log 2>&1
+	* * * * * cd /var/www/html/phpmonitoring ; ./phpMonitorCron.php >> /var/log/phpmonitoring.log 2>&1
 
 Setup your options.  Copy dbSettings.include.php.sample to dbSettings.include.php, then
 edit dbSettings.include.php and change the connection parameters to match your
