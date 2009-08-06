@@ -54,6 +54,7 @@ Create an Apache config file for the web app.  Under fedora/centos/redhat, it wo
 /etc/httpd/conf.d/phpMonitor.conf.  Put the following configuration into it,
 adjusting port number, path, etc, as needed:
 
+	Listen 82
 	<VirtualHost *:82>
 	DocumentRoot /var/www/html/phpMonitor
 	ServerName phpMonitor
