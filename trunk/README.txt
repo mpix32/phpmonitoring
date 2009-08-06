@@ -1,10 +1,10 @@
 Let's assume this is installed here:
 
-	/var/www/html/phpMonitor
+	/var/www/html/phpmonitoring
 
 Switch to that directory
 
-	cd /var/www/html/phpMonitor
+	cd /var/www/html/phpmonitoring
 
 Is MySQL installed?  This is the fedora/centos/redhat way.
 If it's already installed you can skip this part.
@@ -43,24 +43,24 @@ Setup crontab for monitor jobs.
 
 Add these lines to it - this assumes same install dir and that you want to log to /var/log.
 
-	0 0 * * * rm -f /var/log/phpMonitor.log >/dev/null 2>&1
-	* * * * * /var/www/html/phpMonitor/phpMonitorCron.php >> /var/log/phpMonitor.log 2>&1
+	0 0 * * * rm -f /var/log/phpmonitoring.log >/dev/null 2>&1
+	* * * * * /var/www/html/phpmonitoring/phpMonitorCron.php >> /var/log/phpMonitor.log 2>&1
 
 Setup your options.  Copy dbSettings.include.php.sample to dbSettings.include.php, then
 edit dbSettings.include.php and change the connection parameters to match your
 configuration.
 
 Create an Apache config file for the web app.  Under fedora/centos/redhat, it would be named
-/etc/httpd/conf.d/phpMonitor.conf.  Put the following configuration into it,
+/etc/httpd/conf.d/phpmonitoring.conf.  Put the following configuration into it,
 adjusting port number, path, etc, as needed:
 
 	Listen 82
 	<VirtualHost *:82>
-	DocumentRoot /var/www/html/phpMonitor
-	ServerName phpMonitor
+	DocumentRoot /var/www/html/phpmonitoring
+	ServerName phpmonitoring
 	</VirtualHost>
 
-Assuming you used the above configuration, point your browser to the phpMonitor web app:
+Assuming you used the above configuration, point your browser to the phpmonitoring web app:
 
     http://<server-name>:82
 
