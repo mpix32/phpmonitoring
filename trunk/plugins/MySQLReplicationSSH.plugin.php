@@ -53,7 +53,7 @@ autoRestartFailedSlave = yes    ; automatically issue stop slave/start slave if 
 
 		$output['htmlEmail'] = 1;
 
-		$slaveLagTime = (int)trim($masterResult)-(int)trim($slaveResult);
+		$slaveLagTime = max(0, (int)trim($masterResult)-(int)trim($slaveResult));
 		$output['measuredValue'] = $slaveLagTime;
 		if ($slaveLagTime < $input['maxSlaveLagTime']) {
 			$output['currentStatus'] = 1;
