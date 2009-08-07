@@ -20,7 +20,7 @@ class_exists('MySQL', false) or include('./classes/MySQL.class.php');
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr align="left" valign="top">
     <td class="trim"><p ><br>
-      <img src="imgs/logo.gif" width="134" height="23"></p></td>
+      <img src="imgs/logo.png" width="134" height="23"></p></td>
     <td width="100%" valign="top"><br>
       <br>
       <table width="100%" border="0" cellspacing="0" cellpadding="0">
