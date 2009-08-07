@@ -6,11 +6,11 @@ class MySQLReplicationSSHPlugin extends Plugin {
 
 	//this is default input, prefilled when monitor instance is setup - input is stored in sqllite for the monitor and are only used here
 	public static $rawInput =
-"masterHost = 127.0.0.1          ; mysql master host name
+"masterHost = localhost          ; mysql master host name
 masterLoginUser = root          ; mysql master login user name
 masterMySQLUser = root          ; mysql master user name for connecting to mysql
 masterMySQLPasswd =             ; mysql master password for connecting to mysql (optional)
-slaveHost = 127.0.0.1           ; mysql slave host name
+slaveHost = localhost           ; mysql slave host name
 slaveLoginUser = root           ; mysql slave login user name
 slaveMySQLUser = root           ; mysql slave user name for connecting to mysql
 slaveMySQLPasswd =              ; mysql slave password for connecting to mysql (optional)

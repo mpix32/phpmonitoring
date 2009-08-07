@@ -6,7 +6,7 @@ class DiskUsageSSHPlugin extends Plugin {
 
 	//this is default input, prefilled when monitor instance is setup - input is stored in sqllite for the monitor and are only used here
 	public static $rawInput =
-"host = 127.0.0.1                ; host name to check
+"host = localhost                ; host name to check
 loginUser = root                ; login user name
 warningAtPercentFilled = 90     ; maximum disk full percentage, above which we issue notification
 ";

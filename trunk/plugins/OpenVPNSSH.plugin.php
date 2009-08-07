@@ -6,9 +6,9 @@ class OpenVPNSSHPlugin extends Plugin {
 
 	//this is default input, prefilled when monitor instance is setup - input is stored in sqllite for the monitor and are only used here
 	public static $rawInput =
-"host = 127.0.0.1                ; host name to check
+"host = localhost                ; host name to check
 loginUser = root                ; login user name
-pingHost = 127.0.0.1            ; host to ping through VPN
+pingHost = localhost            ; host to ping through VPN
 autoRestartFailedOpenVPN = yes	; automatically restart OpenVPN if failed
 ";
 
