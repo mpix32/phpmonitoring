@@ -1,13 +1,15 @@
 <?php include('./requireLogin.include.php');?>
 <?php include('./header.include.php');?>
 
-      <table width="100%" border=0 cellpadding=1 cellspacing=2 >
+<table width="100%" border="0" cellpadding="1" cellspacing="2">
 <thead class="top">
 <tr bgcolor="#990000">
-	<td colspan="8" align="center">Monitors</td>
+        <td align="center">Monitors</td>
 </tr>
 </thead>
+</table>
 
+<table class="sortable" width="100%" border="0" cellpadding="1" cellspacing="2">
 <tr class="sub">
 <td align=center>Monitor</td>
 <td align=center>Plugin</td>
