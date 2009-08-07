@@ -85,15 +85,19 @@ mysql_free_result($rs);
 	<tr><td>monitor id</td><td><?php if($id!==0){ echo($id);}?></td></tr>
 	<tr><td>Installed Plugins</td><td><select onchange="javascript: populateDefaultInput();" name="pluginType">
 	 <?php
-	 if($pluginType=='') echo("<option>Pick One");
-foreach(scandir('plugins/') as $item) {
-	if( (is_file('plugins/'.$item)) && (strpos($item,'.plugin.php')!==false) ){
-		$p=explode('.',$item);
-		$pluginClassName = $p[0].'Plugin';		
-		class_exists($pluginClassName, false) or include('./plugins/'.$p[0].'.plugin.php');
-		echo("<option value='$p[0]'");
-		if($p[0]==$pluginType) echo(' selected');
-		echo(">$p[0]");
+	 if($pluginType=='') echo("<option>Pick One</option>\n");
+foreach (scandir('plugins/') as $item) {
+	$fn = './plugins/'.$item;
+	if (   (is_file($fn))
+		&& (($pos = strrpos($item,'.plugin.php')) !== false)
+		&& (($pos+11) == strlen($item))
+		&& ($item[0] != '.')   ) {
+		$pluginName = substr($item, 0, strlen($item)-11);
+		$pluginClassName = $pluginName.'Plugin';
+		class_exists($pluginClassName, false) or include($fn);
+		echo('<option value="'.htmlentities($pluginName).'"');
+		if ($pluginName == $pluginType) echo(' selected');
+		echo('>'.htmlentities($pluginName)."</option>\n");
 	}
 }
 ?></select></td></tr>
