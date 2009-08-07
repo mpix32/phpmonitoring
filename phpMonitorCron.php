@@ -86,12 +86,19 @@ for ($i = 1; $i <= $cronIterations; $i++) {
 			}else{
 				$mail->Subject = "$pluginType @ $name [Status: Error | Response Time: $output[responseTimeMs]ms]";
 			}
-			if( (boolean)$output['htmlEmail'] ){
-				$mail->AltBody    = $output['returnContent'];
-				$mail->MsgHTML($output['returnContent']);
-				$mail->IsHTML=(boolean)$output['htmlEmail'];
+			//if a pluggin doesnt return content the email will error
+			if( (isset($output['returnContent'])) && 
+				($output['returnContent']!='') ){
+				$body = $output['returnContent'];
 			}else{
-				$mail->Body = $output['returnContent'];
+				$body = 'plugin returned no data';
+			}
+			if( (boolean)$output['htmlEmail'] ){
+					$mail->AltBody = $body;
+					$mail->MsgHTML($body);
+					$mail->IsHTML=(boolean)$output['htmlEmail'];
+			}else{
+				$mail->Body = $body;
 			}
 			if(!$mail->Send()) {
 					echo("Mailer Error: " . $mail->ErrorInfo);
