@@ -11,16 +11,16 @@
 
 <table class="sortable" width="100%" border="0" cellpadding="1" cellspacing="2">
 <tr class="sub">
-<td align=center>Monitor</td>
-<td align=center>Plugin</td>
-<td align=center>Frequency</td>
-<td align=center>Status</td>
-<td align=center>Last Run</td>
-<td align=center>Last Error</td>
-<td align=center>Active</td>
-<td align=center>Reports</td>
+<th align=center>Monitor</td>
+<th align=center>Plugin</td>
+<th align=center>Frequency</td>
+<th align=center>Status</td>
+<th align=center>Last Run</td>
+<th align=center>Last Error</td>
+<th align=center>Active</td>
+<th align=center>Reports</td>
 </tr>
-<tbody class="grey">
+<!--<tbody class="grey">-->
 <?php
 $mysql = new MySQL();
 $rs = $mysql->runQuery("
@@ -30,7 +30,7 @@ order by active, name;
 ");
 while($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {
 ?>
-<tr bgcolor="#dddddd">
+<tr class="grey" bgcolor="#dddddd">
 <td align="left">&nbsp;&nbsp;<a href="setupMonitor.php?id=<?php echo($row['id']);?>"><?php echo($row['name']);?></a></td>
 <td align="left">&nbsp;&nbsp;<?php echo($row['pluginType']);?></td>
 <td align="left">&nbsp;&nbsp;<?php echo($row['frequency']);?></td>
@@ -44,7 +44,7 @@ while($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {
 }
 mysql_free_result($rs);
 ?>
-</tbody>
+<!--</tbody>-->
 <tfoot class="footer">
 <tr bgcolor="#990000">
 <td colspan="8" align="center"><?php echo(date("F j, Y, g:i a"));?></td>
