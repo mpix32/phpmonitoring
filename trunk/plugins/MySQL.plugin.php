@@ -19,7 +19,7 @@ databasename = yourmysqldatabasename    ; database name in which to run the test
 		return array (
 			'name'=>'MySQL',
 			'description'=>'preforms a simple mysql query - if it gets even 1 result back - its sucsessful',
-			'author'=>'mike',
+			'author'=>'mikerlynn',
 			'version'=>'1.0'
 		);
 	}

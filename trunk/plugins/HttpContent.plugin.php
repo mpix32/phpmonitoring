@@ -20,7 +20,7 @@ attemptWait = 0                             ; ms to wait between attempts - defa
 		return array(
 			'name'=>'HttpContent',
 			'description'=>'Grabs content a web page and searches content for proper strings indicating success or error.',
-			'author'=>'mike',
+			'author'=>'mikerlynn',
 			'version'=>'1.0'
 		);
 	}

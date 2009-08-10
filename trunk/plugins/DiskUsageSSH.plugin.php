@@ -15,7 +15,7 @@ warningAtPercentFilled = 90     ; maximum disk full percentage, above which we i
 		return array(
 			'name'=>'DiskUsageSSH',
 			'description'=>'Uses SSH to login to remote host via keys and check hard disk usage with df command.',
-			'author'=>'mike',
+			'author'=>'mikerlynn',
 			'version'=>'1.0'
 		);
 	}
