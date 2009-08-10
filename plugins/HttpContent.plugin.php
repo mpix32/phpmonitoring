@@ -13,6 +13,7 @@ maxRequestTimeoutSeconds = 10               ; request timeout
 goodContent = SERVER-OK                     ; if it doesn't see this always bad
 badContent = ERROR                          ; if sees this always bad
 attempts = 1                                ; # of attempts to find full success before reporting failure
+attemptWait = 0                             ; ms to wait between attempts - default 0 no wait
 ";
 
 	public function about() {
@@ -31,21 +32,32 @@ attempts = 1                                ; # of attempts to find full success
 		$badContent=1;
 		$goodContent=1;
 		
-		$output=Plugin::$output;///set defaults for all output
-		$t = new Timer();
-		$t->start();
-		$output['returnContent'] = HttpContentPlugin::doHTTPGet($input['url'],$input['maxConnectTimeoutSeconds'],$input['maxRequestTimeoutSeconds']);
-		$output['responseTimeMs'] = (int)$t->stop();
-		$output['measuredValue']=$output['responseTimeMs'];
-		if (trim($input['goodContent'])!='') $goodContent = (strpos($output['returnContent'], $input['goodContent'])===false) ? 0 : 1;
-		if(trim($input['badContent'])!='') $badContent  = (strpos($output['returnContent'], $input['badContent'])===false) ? 1 : 0;
-		
-		//default to down
-		$output['currentStatus']= 0;
-		
-		//if its already bad, then its bad.
-		if (($goodContent+$badContent) == 2) $output['currentStatus'] = 1;
-	
+		for($i=$input['attempts']; $i <= $input['attempts']; $counter++){
+			$output=Plugin::$output;///set defaults for all output
+			$t = new Timer();
+			$t->start();
+			$output['returnContent'] = HttpContentPlugin::doHTTPGet($input['url'],$input['maxConnectTimeoutSeconds'],$input['maxRequestTimeoutSeconds']);
+			$output['responseTimeMs'] = (int)$t->stop();
+			$output['measuredValue']=$output['responseTimeMs'];
+			if (trim($input['goodContent'])!='') $goodContent = (strpos($output['returnContent'], $input['goodContent'])===false) ? 0 : 1;
+			if(trim($input['badContent'])!='') $badContent  = (strpos($output['returnContent'], $input['badContent'])===false) ? 1 : 0;
+			
+			//default to down
+			$output['currentStatus']= 0;
+			
+			//if its already bad, then its bad.
+			if (($goodContent+$badContent) == 2) $output['currentStatus'] = 1;
+			if ($output['currentStatus']==1){
+				//we've got what we wanted
+				break;
+			} else {
+				//else keep going till we do or hit max attempts
+				if( (isset($input['attemptWait'])) && ($input['attemptWait']!==0) )
+					usleep($input['attemptWait']*1000);
+			}
+			
+		}
+
 		//html email
 		$output['htmlEmail'] = 1;
 		return $output;
@@ -74,7 +86,7 @@ attempts = 1                                ; # of attempts to find full success
 		try {
 			$data = curl_exec($con);
 		} catch (Exception $e) {
-			return $e->getMessage();
+			return 'http error - '.$e->getMessage();//this makes sure it always returns content if there's an error
 		}
 		curl_close($con);
 		return $data;

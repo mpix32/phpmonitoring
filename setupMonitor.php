@@ -105,7 +105,7 @@ foreach (scandir('plugins/') as $item) {
 	<tr><td>Monitoring Frequency(seconds)</td><td><input size="5" type="text" name="frequency" value="<?php echo($frequency); ?>"/></td></tr>
 	<tr><td>Alerts On(1=yes,0=no)</td><td><input size="2" type="text" name="notifyAdmin" value="<?php echo($notifyAdmin); ?>"/></td></tr>
 	<tr><td>Active(1=yes,0=no)</td><td><input size="2" type="text" name="active" value="<?php echo($active); ?>"/></td></tr>
-	<tr><td>Plugin Data</td><td><textarea rows="15" cols="100" id="pluginInput" name="pluginInput"><?php echo($pluginInput); ?></textarea></td></tr>
+	<tr><td>Plugin Data</td><td><textarea rows="15" cols="130" id="pluginInput" name="pluginInput"><?php echo($pluginInput); ?></textarea></td></tr>
 	<tr><td>&nbsp;</td><td><input type="submit" name="submit" value="Save Settings"/></td></tr>
 	<tr><td>&nbsp;</td><td><?php if($id!=0){?><a href="setupMonitor.php?id=<?php echo($id);?>&cpy=1">copy monitor</a><?php }?></td></tr>
 	<tr><td>&nbsp;</td><td><?php if($id!=0){?><a onclick="return confirm('are you sure you want to delete?')" href="setupMonitor.php?id=<?php echo($id);?>&del=1">delete monitor</a><?php }?></td></tr>
