@@ -1,3 +1,4 @@
+#labels Featured
  * DiskUsageSSH - 1.0 - Uses SSH to login to remote host via keys and check hard disk usage with df command. - mike
 
  * HttpContent - 1.0 - Grabs content a web page and searches content for proper strings indicating success or error. - mike
