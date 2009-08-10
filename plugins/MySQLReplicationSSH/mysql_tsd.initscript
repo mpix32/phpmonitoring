@@ -1,0 +1,83 @@
+#!/bin/bash
+#
+# mysql_tsd     Starts and stops the MySQL replication timestamp update daemon.
+#
+# chkconfig: - 64 36
+# description:  mysql_tsd MySQL replication timestamp update daemon.
+# processname: mysql_tsd
+# pidfile: /var/run/mysql_tsd/mysql_tsd.pid
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# Source networking configuration.
+. /etc/sysconfig/network
+
+prog="mysql_tsd"
+pidfile="/var/run/mysql_tsd/mysql_tsd.pid"
+
+start(){
+	mkdir -p "`dirname \"$pidfile\"`"
+	if [ -f "$pidfile" ]; then
+		echo "$prog is already running!"
+		action $"Starting $prog: " /bin/false
+		return 1
+	fi
+		exec /home/mysql_tsd </dev/null >/dev/null 2>&1 &
+		ret=$?
+		if [ $ret -eq 0 ]; then
+		action $"Starting $prog: " /bin/true
+		mkdir -p "`dirname \"$pidfile\"`"
+		pgrep -x -n "mysql_tsd" > "$pidfile"
+		touch /var/lock/subsys/mysql_tsd
+	else
+		action $"Starting $prog: " /bin/false
+	fi
+	return $ret
+}
+
+stop(){
+	/bin/kill `cat "$pidfile"  2>/dev/null ` >/dev/null 2>&1
+	ret=$?
+	rm -f "$pidfile"
+	if [ $ret -eq 0 ]; then
+	action $"Stopping $prog: " /bin/true
+		rm -f /var/lock/subsys/mysql_tsd
+	else
+		action $"Stopping $prog: " /bin/false
+	fi
+	return $ret
+}
+
+restart(){
+	stop
+	start
+}
+
+condrestart(){
+	[ -e /var/lock/subsys/mysql_tsd ] && restart || :
+}
+
+# See how we were called.
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  status)
+	status mysql_tsd
+	;;
+  restart)
+	restart
+	;;
+  condrestart)
+	condrestart
+	;;
+  *)
+	echo $"Usage: $0 {start|stop|status|condrestart|restart}"
+	exit 1
+esac
+
+exit $?
