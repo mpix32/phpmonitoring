@@ -1,0 +1,11 @@
+ * DiskUsageSSH - 1.0 - Uses SSH to login to remote host via keys and check hard disk usage with df command. - mike
+
+ * HttpContent - 1.0 - Grabs content a web page and searches content for proper strings indicating success or error. - mike
+
+ * MySQL - 1.0 - preforms a simple mysql query - if it gets even 1 result back - its sucsessful - mike
+
+ * MySQLReplicationSSH - 1.0 - Uses SSH to login to remote host via keys and attempt to ping through an OpenVPN tunnel to a host on the other end. - roncemer
+
+ * OpenVPNSSH - 1.0 - Uses SSH to login to remote host via keys and attempt to ping through an OpenVPN tunnel to a host on the other end. - roncemer
+
+ * Ping - 1.0 - icmp pings a host - mike
