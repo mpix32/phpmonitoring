@@ -6,22 +6,22 @@ class MySQLReplicationSSHPlugin extends Plugin {
 
 	//this is default input, prefilled when monitor instance is setup - input is stored in sqllite for the monitor and are only used here
 	public static $rawInput =
-"masterHost = localhost          ; mysql master host name
-masterLoginUser = root          ; mysql master login user name
-masterMySQLUser = root          ; mysql master user name for connecting to mysql
-masterMySQLPasswd =             ; mysql master password for connecting to mysql (optional)
-slaveHost = localhost           ; mysql slave host name
-slaveLoginUser = root           ; mysql slave login user name
-slaveMySQLUser = root           ; mysql slave user name for connecting to mysql
-slaveMySQLPasswd =              ; mysql slave password for connecting to mysql (optional)
-maxSlaveLagTime = 60            ; max slave lag time seconds before we consider it behind
-autoRestartFailedSlave = yes    ; automatically issue stop slave/start slave if behind
+"masterHost = localhost              ; mysql master host name
+masterLoginUser = root              ; mysql master login user name
+masterMySQLUser = root              ; mysql master user name for connecting to mysql
+masterMySQLPasswd =                 ; mysql master password for connecting to mysql (optional)
+slaveHost = localhost               ; mysql slave host name
+slaveLoginUser = root               ; mysql slave login user name
+slaveMySQLUser = root               ; mysql slave user name for connecting to mysql
+slaveMySQLPasswd =                  ; mysql slave password for connecting to mysql (optional)
+maxSlaveLagTimeBeforeRestart = 60   ; max slave lag time seconds before we issue stop slave/start slave (0=never restart slave)
+maxSlaveLagTimeBeforeNotify = 300   ; max slave lag time seconds before we issue notification email
 ";
 
 	public function about() {
 		return array(
 			'name'=>'OpenVPNSSH',
-			'description'=>'Uses SSH to login to remote host via keys and attempt to ping through an OpenVPN tunnel to a host on the other end.',
+			'description'=>'Uses SSH to login to remote MySQL master and slave servers, and compares the timestamp in a user-created REPLICATION_TIMESTAMP table in the mysql database. Requires that the user create a table and an update service on the master. For instructions, see plugins/support_files/MySQLReplicationSSH/README.txt.',
 			'author'=>'roncemer',
 			'version'=>'1.0'
 		);
@@ -55,28 +55,27 @@ autoRestartFailedSlave = yes    ; automatically issue stop slave/start slave if 
 
 		$slaveLagTime = max(0, (int)trim($masterResult)-(int)trim($slaveResult));
 		$output['measuredValue'] = $slaveLagTime;
-		if ($slaveLagTime < $input['maxSlaveLagTime']) {
+		$restartThresh = (int)$input['maxSlaveLagTimeBeforeRestart'];
+		if ( ($restartThresh > 0) && ($slaveLagTime >= $restartThresh) ) {
+			$slaveRestartCmd = 'echo \\"stop slave; start slave;\\" | mysql -s -u \\"'.$input['slaveMySQLUser'].'\\"';
+			if ($input['slaveMySQLPasswd'] != '') {
+				$slaveRestartCmd .= ' -p \\"'.$input['slaveMySQLPasswd'].'\\"';
+			}
+			$slaveRestartCmd .= ' mysql 2>&1';
+			echo "Restart slave:\n";
+			echo shell_exec(
+				'ssh '.$input['slaveLoginUser'].'@'.$input['slaveHost'].' "'.$slaveRestartCmd.'"'
+			);
+			echo "\n\n\n";
+		}
+		if ($slaveLagTime < $input['maxSlaveLagTimeBeforeNotify']) {
 			$output['currentStatus'] = 1;
-			$output['returnContent'] = "All normal - slave lag time of {$slaveLagTime} is less than {$input['maxSlaveLagTime']}.";
+			$output['returnContent'] = "All normal - slave lag time of {$slaveLagTime} is less than {$input['maxSlaveLagTimeBeforeNotify']}.";
 		} else {
 			$output['currentStatus'] = 0;
-			$rc =
+			$output['returnContent'] =
 				"<pre>MySQL slave {$input['slaveHost']} is behind {$input['masterHost']}".
-				" by {$slaveLagTime} seconds.\n";
-			if ($input['autoRestartFailedSlave']) {
-				$slaveRestartCmd = 'echo \\"stop slave; start slave;\\" | mysql -s -u \\"'.$input['slaveMySQLUser'].'\\"';
-				if ($input['slaveMySQLPasswd'] != '') {
-					$slaveRestartCmd .= ' -p \\"'.$input['slaveMySQLPasswd'].'\\"';
-				}
-				$slaveRestartCmd .= ' mysql 2>&1';
-				///echo "slaveRestartCmd: $slaveRestartCmd\n";
-				$rc .= shell_exec('ssh '.$input['slaveLoginUser'].'@'.$input['slaveHost'].' "'.$slaveRestartCmd.'"').
-					"\n\nThe slave has been restarted automatically.\n".
-					"If it doesn't recover, manual intervention may be required.\n";
-				///echo "rc: $rc\n";
-			}
-			$rc .= "</pre>";
-			$output['returnContent'] = $rc;
+				" by {$slaveLagTime} seconds, which exceeds {$input['maxSlaveLagTimeBeforeNotify']} seconds.\n</pre>";
 		}
 		return $output;
 	}
