@@ -72,7 +72,9 @@ Now you can begin adding monitors.  Click "Add Monitor".  Select the monitor typ
 to add from the drop-down list.  Edit the settings to your needs, then click "Save Settings".
 Now click the "Monitors" link.  You should see your new monitor listed there.
 
-The script killAllMonitors.sh is for killing any currently running jobs.  If you make a code change or pluging change you may want to run this to prevent errors.  It will natrually happen anyways when the cronjobs die off - but this rushes the process.
+The script killAllMonitors.sh is for killing any currently running jobs.  If you make a code 
+change or pluging change you may want to run this to prevent errors.  It will natrually happen
+anyways when the cronjobs die off - but this rushes the process.
 
 
 
