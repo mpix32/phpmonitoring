@@ -20,7 +20,7 @@ maxSlaveLagTimeBeforeNotify = 300   ; max slave lag time seconds before we issue
 
 	public function about() {
 		return array(
-			'name'=>'OpenVPNSSH',
+			'name'=>'MySQLReplicationSSH',
 			'description'=>'Uses SSH to login to remote MySQL master and slave servers, and compares the timestamp in a user-created REPLICATION_TIMESTAMP table in the mysql database. Requires that the user create a table and an update service on the master. For instructions, see plugins/support_files/MySQLReplicationSSH/README.txt.',
 			'author'=>'roncemer',
 			'version'=>'1.0'
