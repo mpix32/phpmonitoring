@@ -14,7 +14,7 @@ maxPacketLoss = 0               ; max packet loss (if exceeded, we send out a no
 		return array (
 			'name'=>'Ping',
 			'description'=>'icmp pings a host',
-			'author'=>'mike',
+			'author'=>'mikerlynn',
 			'version'=>'1.0'
 		);
 	}
