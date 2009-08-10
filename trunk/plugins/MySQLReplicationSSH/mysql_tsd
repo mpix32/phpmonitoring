@@ -1,0 +1,5 @@
+#!/bin/sh
+while [ 1 = 1 ]; do
+	echo "update REPLICATION_TIMESTAMP set LATEST_TIMESTAMP = unix_timestamp(now());" | mysql -u root mysql
+	sleep 5
+done
