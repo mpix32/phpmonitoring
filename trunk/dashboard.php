@@ -57,11 +57,11 @@ limit 10;
 		<?php
 		$mysql = new MySQL();
 		$rs = $mysql->runQuery("
-		select max(l.dateTime) as dateTime, l.measuredValue, l.status, m.name, m.currentStatus
-		from monitors m inner join logging l on l.monitorId = m.id
-		where l.status = 0 and m.currentStatus = 0
-		group by m.name
-		order by max(l.dateTime) desc limit 20;
+select ld.dateTime, ld.measuredValue, m.name
+from monitors m
+inner join (select monitorId, max(id) as id from logging where status = 0 group by monitorId) ldid on ldid.monitorId = m.id
+inner join logging ld on ld.id = ldid.id
+where m.currentStatus = 0 limit 20;
 		");
 		$none=true;
 		while($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {
