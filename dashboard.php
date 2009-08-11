@@ -34,9 +34,10 @@ limit 10;
 		");
 		//--group by m.name
 		while($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {
+			$whenText = Utilities::timeDiffString($row['failureDateTime']);
 			echo("<tr>");
-			echo("<td>".Utilities::timeDiffString($row['failureDateTime'])."</td>");
-			echo("<td>".$row['name']."</td>");
+			echo("<td>".."</td>");
+			echo("<td>{$row['failureDateTime']} - {$row['recoveryDateTime']} ($whenText)</td>");
 			echo("<td>".$row['measuredValue']."</td>");
 			echo("</tr>");
 		}
