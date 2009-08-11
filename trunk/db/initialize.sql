@@ -28,6 +28,9 @@ create table logging (
 	)
 engine=MyISAM;
 
+ALTER TABLE logging ADD INDEX (dateTime);  
+ALTER TABLE logging ADD INDEX (monitorId);  
+
 create table settings (
 	cronIterations int not null,
 	settings text
