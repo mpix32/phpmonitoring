@@ -1,6 +1,7 @@
 <?php
 class_exists('Settings', false) or include('./classes/Settings.class.php');
 class_exists('MySQL', false) or include('./classes/MySQL.class.php');
+class_exists('Utilities', false) or include('./classes/Utilities.class.php');
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -36,9 +37,10 @@ class_exists('MySQL', false) or include('./classes/MySQL.class.php');
         <td width="10"><img src="imgs/clear.gif" width="8" height="8"></td>
         <td width="160" bgcolor="#eeeeee">
 		<ul>
+		  <li><a href="dashboard.php" class="main">Dashboard</a></li>
 		  <li><a href="monitors.php" class="main">Monitors</a></li>
-  		  <li><a href="setupMonitor.php" class="main">Add Monitor</a></li>		  
-   		  <li><a href="settings.php" class="main">Settings</a></li>		  
+  		  <li><a href="setupMonitor.php" class="main">Add Monitor</a></li>
+   		  <li><a href="settings.php" class="main">Settings</a></li>
           <li><a href="plugins.php" class="main">Plugins</a></li>
 		 </ul>
 	  </td>
