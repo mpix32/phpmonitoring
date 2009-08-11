@@ -34,7 +34,7 @@
 		//--group by m.name
 		while($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {
 			echo("<tr>");
-			echo("<td>".Utilities::timeDiffString($row['dateTime'])."</td>");
+			echo("<td>".Utilities::timeDiffString($row['failureDateTime'])."</td>");
 			echo("<td>".$row['name']."</td>");
 			echo("<td>".$row['measuredValue']."</td>");
 			echo("</tr>");
