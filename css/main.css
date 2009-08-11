@@ -54,3 +54,20 @@
 ul {
 	list-style-image:url('../imgs/nav.gif');
 }
+
+legend{
+	font-weight: bold;
+	font-size: 14px;
+}
+fieldset{
+	margin: 12px;
+	padding: 5px;
+	float:left;
+	background:#FBEDED;
+	border: 1px solid #CCCCCC
+}
+.dashboard td{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+}
+
