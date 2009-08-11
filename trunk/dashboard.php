@@ -36,8 +36,8 @@ limit 10;
 		while($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {
 			$whenText = Utilities::timeDiffString($row['failureDateTime']);
 			echo("<tr>");
-			echo("<td>".."</td>");
 			echo("<td>{$row['failureDateTime']} - {$row['recoveryDateTime']} ($whenText)</td>");
+			echo("<td>".htmlentities($row['name'])."</td>");
 			echo("<td>".$row['measuredValue']."</td>");
 			echo("</tr>");
 		}
