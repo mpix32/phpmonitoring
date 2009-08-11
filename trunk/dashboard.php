@@ -20,11 +20,17 @@
 		$mysql = new MySQL();
 		//this query isn't right - the measured value isnt the latest errord measured value
 		$rs = $mysql->runQuery("
-select f.dateTime as failureDateTime, m.name, f.measuredValue
-from monitors m
-inner join (select monitorId, max(id) as failureId from logging where status = 0 group by monitorId) fid on fid.monitorId = m.id
-inner join logging f on f.id = fid.failureId
-where m.currentStatus = 1 order by f.id desc limit 10;
+select q.failureDateTime, min(q.recoveryDateTime) as recoveryDateTime, q.name, q.measuredValue from (
+	select f.dateTime as failureDateTime, r.dateTime as recoveryDateTime, m.name, f.measuredValue
+	from monitors m
+	inner join (select monitorId, max(id) as failureId from logging where status = 0 group by monitorId) fid on fid.monitorId = m.id
+	inner join logging f on f.id = fid.failureId
+	inner join logging r on r.monitorId = fid.monitorId and r.id > fid.failureId and r.status <> 0
+	where m.currentStatus = 1 order by f.id desc, r.id
+) q
+group by q.failureDateTime, q.name, q.measuredValue
+order by q.failureDateTime, q.name
+limit 10;
 		");
 		//--group by m.name
 		while($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {
