@@ -36,11 +36,11 @@ attemptWait = 0                             ; ms to wait between attempts - defa
 			$output=Plugin::$output;///set defaults for all output
 			$t = new Timer();
 			$t->start();
-			$output['returnContent'] = HttpContentPlugin::doHTTPGet($input['url'],$input['maxConnectTimeoutSeconds'],$input['maxRequestTimeoutSeconds']);
+			$returnContent = HttpContentPlugin::doHTTPGet($input['url'],$input['maxConnectTimeoutSeconds'],$input['maxRequestTimeoutSeconds']);
 			$output['responseTimeMs'] = (int)$t->stop();
 			$output['measuredValue']=$output['responseTimeMs'];
-			if (trim($input['goodContent'])!='') $goodContent = (strpos($output['returnContent'], $input['goodContent'])===false) ? 0 : 1;
-			if(trim($input['badContent'])!='') $badContent  = (strpos($output['returnContent'], $input['badContent'])===false) ? 1 : 0;
+			if (trim($input['goodContent'])!='') $goodContent = (strpos($returnContent, $input['goodContent'])===false) ? 0 : 1;
+			if(trim($input['badContent'])!='') $badContent  = (strpos($returnContent, $input['badContent'])===false) ? 1 : 0;
 			
 			//default to down
 			$output['currentStatus']= 0;
