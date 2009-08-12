@@ -20,23 +20,23 @@
 		$mysql = new MySQL();
 		//this query isn't right - the measured value isnt the latest errord measured value
 		$rs = $mysql->runQuery("
-select q.failureDateTime, min(q.recoveryDateTime) as recoveryDateTime, q.name, q.measuredValue from (
-	select f.dateTime as failureDateTime, r.dateTime as recoveryDateTime, m.name, f.measuredValue
-	from monitors m
-	inner join (select monitorId, max(id) as failureId from logging where status = 0 group by monitorId) fid on fid.monitorId = m.id
-	inner join logging f on f.id = fid.failureId
-	inner join logging r on r.monitorId = fid.monitorId and r.id > fid.failureId and r.status <> 0
-	where m.currentStatus = 1 order by f.id desc, r.id
-) q
-group by q.failureDateTime, q.name, q.measuredValue
-order by q.failureDateTime, q.name
-limit 10;
+		select l.dateTime as failureDateTime, m.name, l.measuredValue
+from monitors m 
+	inner join logging l on m.id = l.monitorId
+	inner join (
+        	select max(id) as id, monitorId
+		from logging
+		where status = 0
+		group by monitorId
+	) le on le.id = l.id
+where m.currentStatus = 1               
+order by l.dateTime desc limit 10;
 		");
 		//--group by m.name
 		while($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {
 			$whenText = Utilities::timeDiffString($row['failureDateTime']);
 			echo("<tr>");
-			echo("<td>{$row['failureDateTime']} - {$row['recoveryDateTime']} ($whenText)</td>");
+			echo("<td>{$row['failureDateTime']} - ($whenText)</td>");
 			echo("<td>".htmlentities($row['name'])."</td>");
 			echo("<td>".$row['measuredValue']."</td>");
 			echo("</tr>");
@@ -57,18 +57,25 @@ limit 10;
 		<?php
 		$mysql = new MySQL();
 		$rs = $mysql->runQuery("
-select ld.dateTime, ld.measuredValue, m.name
-from monitors m
-inner join (select monitorId, max(id) as id from logging where status = 0 group by monitorId) ldid on ldid.monitorId = m.id
-inner join logging ld on ld.id = ldid.id
-where m.currentStatus = 0 limit 20;
+		select l.dateTime as failureDateTime, m.name, l.measuredValue
+from monitors m 
+	inner join logging l on m.id = l.monitorId
+	inner join (
+        	select max(id) as id, monitorId
+		from logging
+		where status = 0
+		group by monitorId
+	) le on le.id = l.id
+where m.currentStatus = 0      
+order by l.dateTime desc limit 20;
 		");
 		$none=true;
 		while($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {
 			$none=false;
+			$whenText = Utilities::timeDiffString($row['failureDateTime']);
 			echo("<tr>");
-			echo("<td>".Utilities::timeDiffString($row['dateTime'])."</td>");
-			echo("<td>".$row['name']."</td>");
+			echo("<td>{$row['failureDateTime']} - ($whenText)</td>");
+			echo("<td>".htmlentities($row['name'])."</td>");
 			echo("<td>".$row['measuredValue']."</td>");
 			echo("</tr>");
 		}
