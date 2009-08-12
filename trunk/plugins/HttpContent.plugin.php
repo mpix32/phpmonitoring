@@ -32,7 +32,7 @@ attemptWait = 0                             ; ms to wait between attempts - defa
 		$badContent=1;
 		$goodContent=1;
 		
-		for($i=$input['attempts']; $i <= $input['attempts']; $counter++){
+		for($i=$input['attempts']; $i <= $input['attempts']; $i++){
 			$output=Plugin::$output;///set defaults for all output
 			$t = new Timer();
 			$t->start();
