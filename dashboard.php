@@ -57,17 +57,20 @@ order by l.dateTime desc limit 10;
 		<?php
 		$mysql = new MySQL();
 		$rs = $mysql->runQuery("
-		select l.dateTime as failureDateTime, m.name, l.measuredValue
+select min(l.dateTime) as failureDateTime, l.measuredValue, m.name
 from monitors m 
-	inner join logging l on m.id = l.monitorId
-	inner join (
-        	select max(id) as id, monitorId
-		from logging
-		where status = 0
-		group by monitorId
-	) le on le.id = l.id
-where m.currentStatus = 0      
-order by l.dateTime desc limit 20;
+        inner join (
+				---newest "good"
+                select max(id) as id, monitorId
+                from logging
+                where status = 1
+                group by monitorId
+        ) le on le.monitorId = m.id
+        inner join logging l on m.id = l.monitorId and le.id < l.id
+
+where m.currentStatus = 0 and l.status = 0
+group by m.name
+order by min(l.dateTime) desc limit 20;
 		");
 		$none=true;
 		while($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {
