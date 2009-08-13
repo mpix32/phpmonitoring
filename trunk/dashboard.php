@@ -60,7 +60,6 @@ order by l.dateTime desc limit 10;
 select min(l.dateTime) as failureDateTime, l.measuredValue, m.name
 from monitors m 
         inner join (
-				---newest "good"
                 select max(id) as id, monitorId
                 from logging
                 where status = 1
