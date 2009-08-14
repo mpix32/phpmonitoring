@@ -10,6 +10,7 @@ class_exists('Utilities', false) or include('./classes/Utilities.class.php');
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="css/main.css" rel="stylesheet" type="text/css">
 <link href="css/table.css" rel="stylesheet" type="text/css">
+<link rel="shortcut icon" href="imgs/favicon.ico" type="image/x-icon">
 <script type="text/javascript" src="scripts.js"></script>
 </head>
 <body onload="bodyLoad();" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
