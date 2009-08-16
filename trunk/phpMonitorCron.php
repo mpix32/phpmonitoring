@@ -54,7 +54,9 @@ for ($i = 1; $i <= $cronIterations; $i++) {
 		class_exists($pluginClass, false) or include('./plugins/'.$pluginType.'.plugin.php');
 		$input = Settings::parseIniString($pluginInput);
 		eval('$output = '.$pluginClass.'::runPlugin($input);');
-		echo("$pluginType - $id - $name - Running\n");
+		echo("$pluginType - $id - $name - Started\n");
+		$t = new Timer();
+		$t->start();
 
 		$sql = sprintf(
 			'update monitors set currentStatus = %d where id = %d;',
@@ -108,7 +110,9 @@ for ($i = 1; $i <= $cronIterations; $i++) {
 		//log output
 		$sql="insert into logging (monitorId,dateTime,responseTimeMs,measuredValue,returnContent,status) values($id,now(),$output[responseTimeMs],'".mysql_real_escape_string($output['measuredValue'],$mysql->mysqlCon)."','".mysql_real_escape_string($output['returnContent'],$mysql->mysqlCon)."',$output[currentStatus]);";
 		$mysql->runQuery($sql);
-	
+		
+		echo("$pluginType - $id - $name - Ended - " .(int)$t->stop()." ms \n";	
+
 	}else{
 		$mysql->runQuery("UNLOCK TABLES;");
 		//echo("UNLOCKED\n");
