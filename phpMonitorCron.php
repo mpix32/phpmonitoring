@@ -111,7 +111,7 @@ for ($i = 1; $i <= $cronIterations; $i++) {
 		$sql="insert into logging (monitorId,dateTime,responseTimeMs,measuredValue,returnContent,status) values($id,now(),$output[responseTimeMs],'".mysql_real_escape_string($output['measuredValue'],$mysql->mysqlCon)."','".mysql_real_escape_string($output['returnContent'],$mysql->mysqlCon)."',$output[currentStatus]);";
 		$mysql->runQuery($sql);
 		
-		echo("$pluginType - $id - $name - Ended - " . $t->stop() ." ms \n");	
+		echo("$pluginType - $id - $name - Ended - " . round($t->stop(),0) ." ms \n");	
 
 	}else{
 		$mysql->runQuery("UNLOCK TABLES;");
