@@ -12,6 +12,7 @@ class_exists('Utilities', false) or include('./classes/Utilities.class.php');
 <link href="css/table.css" rel="stylesheet" type="text/css">
 <link rel="shortcut icon" href="imgs/favicon.ico" type="image/x-icon">
 <script type="text/javascript" src="scripts.js"></script>
+<script type="text/javascript" src="sorttable.js"></script>
 </head>
 <body onload="bodyLoad();" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
