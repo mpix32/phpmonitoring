@@ -18,7 +18,7 @@ databasename = yourmysqldatabasename    ; database name in which to run the test
 	public function about() {
 		return array (
 			'name'=>'MySQL',
-			'description'=>'preforms a simple mysql query - if it gets even 1 result back - its sucsessful',
+			'description'=>'Preforms a simple mysql query and returns success if it gets at least 1 result back, otherwise it errors',
 			'author'=>'mikerlynn',
 			'version'=>'1.0'
 		);
