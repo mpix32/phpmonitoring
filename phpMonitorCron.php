@@ -36,7 +36,7 @@ for ($i = 1; $i <= $cronIterations; $i++) {
 	//get one at a time only, put a lock on so we only get one
 	$mysql->runQuery("LOCK TABLES monitors WRITE;");
 	//echo("LOCKED\n");
-	$rs = $mysql->runQuery("select id, name, frequency, lastRun, pluginType, pluginInput, active from monitors where lastRun = '' or lastRun is null or (now() > DATE_ADD(lastRun, INTERVAL frequency SECOND) and active=1) limit 1;");
+	$rs = $mysql->runQuery("select id, name, frequency, lastRun, pluginType, pluginInput, notifyAdmin, active from monitors where lastRun = '' or lastRun is null or (now() > DATE_ADD(lastRun, INTERVAL frequency SECOND) and active=1) limit 1;");
 	if($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {
 		$id=$row['id'];
 		$name=$row['name'];
@@ -44,6 +44,7 @@ for ($i = 1; $i <= $cronIterations; $i++) {
 		$lastRun=$row['lastRun'];
 		$pluginType=$row['pluginType'];
 		$pluginInput=$row['pluginInput'];
+		$notifyAdmin=$row['notifyAdmin'];
 		$mysql->runQuery("update monitors set lastRun=now() where id = $id;");
 		$mysql->runQuery("UNLOCK TABLES;");
 		//echo("UNLOCKED\n");
@@ -74,7 +75,7 @@ for ($i = 1; $i <= $cronIterations; $i++) {
 			$previousStatus=0;
 		}
 		//echo("prev: $previousStatus  - current: $output[currentStatus]\n");
-		if( ($previousStatus!=$output['currentStatus']) ){
+		if( ($notifyAdmin==1) && ($previousStatus!=$output['currentStatus']) ){
 			$mail = new PHPMailer();
 			$mail->IsSMTP();
 			$mail->Host = $settings['smtpServer'];
