@@ -18,6 +18,7 @@
 <th align=center>Last Run</td>
 <th align=center>Last Error</td>
 <th align=center>Active</td>
+<th align=center>Notices</td>
 <th align=center>Reports</td>
 </tr>
 <!--<tbody class="grey">-->
@@ -38,6 +39,7 @@ while($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {
 <td align="left">&nbsp;&nbsp;<?php echo($row['lastRun'])?></td>
 <td align="left">&nbsp;&nbsp;<?php echo($row['lastError'])?></td>
 <td align="left">&nbsp;&nbsp;<span class="<?php if($row['active']==1){echo('green');}else{echo('red');}?>"><?php if($row['active']==1){echo('Yes');}else{echo('No');}?></span></td>
+<td align="left">&nbsp;&nbsp;<span class="<?php if($row['notifyAdmin']==1){echo('green');}else{echo('red');}?>"><?php if($row['notifyAdmin']==1){echo('Yes');}else{echo('No');}?></span></td>
 <td align="center"><a href="monitorLog.php?id=<?php echo($row['id']);?>">Log</a></td>
 </tr>
 <?
@@ -47,7 +49,7 @@ mysql_free_result($rs);
 <!--</tbody>-->
 <tfoot class="footer">
 <tr bgcolor="#990000">
-<td colspan="8" align="center"><?php echo(date("F j, Y, g:i a"));?></td>
+<td colspan="9" align="center"><?php echo(date("F j, Y, g:i a"));?></td>
 </tr>
 </tfoot>
 </table>
