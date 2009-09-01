@@ -15,7 +15,7 @@ passwd = admin
 noticeEmails = you@mail.com
 noticeFromEmail = you@mail.com
 smtpServer = localhost
-smtpServerPort = 5
+smtpServerPort = 25
 flushLogsDays = 365
 ";
 
