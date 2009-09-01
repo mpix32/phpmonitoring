@@ -13,6 +13,7 @@ class_exists('Utilities', false) or include('./classes/Utilities.class.php');
 <link rel="shortcut icon" href="imgs/favicon.ico" type="image/x-icon">
 <script type="text/javascript" src="scripts.js"></script>
 <script type="text/javascript" src="sorttable.js"></script>
+<link rel="alternate" title="phpMonitor Feed" href="<?php echo(Utilities::getRootURL()); ?>/dashboardRss.php" type="application/rss+xml"/>
 </head>
 <body onload="bodyLoad();" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
