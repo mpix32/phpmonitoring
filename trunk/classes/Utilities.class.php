@@ -55,6 +55,71 @@ class Utilities {
 
 	}
 
+	/**
+	* @return string The protocol ('http' or 'https') for the current request.
+	*/
+	public static function getProtocol() {
+		$serverPort = $_SERVER['SERVER_PORT'];
+		if (   ($serverPort == '443')
+			|| (   (array_key_exists('HTTPS', $_SERVER))
+				&& (strtolower($_SERVER['HTTPS']) == 'on')   )   ) {
+			$protocol = 'https';
+		} else {
+			$protocol = 'http';
+		}
+		return $protocol;
+	}
+
+	/**
+	* @return string The server host for the current request.
+	*/
+	public static function getServerHost() {
+		if (array_key_exists('HTTP_HOST', $_SERVER)) {
+			return $_SERVER['HTTP_HOST'];
+		}
+		if (array_key_exists('SERVER_NAME', $_SERVER)) {
+			return $_SERVER['SERVER_NAME'];
+		}
+		return null;
+	}
+
+	/**
+	* @return string The server port for the current request.
+	*/
+	public static function getServerPort() {
+		return $_SERVER['SERVER_PORT'];
+	}
+
+	/**
+	* @return string The URL to the document root for the current request.
+	*/
+	public static function getRootURL() {
+		$serverHost = Utilities::getServerHost();
+		$protocol = Utilities::getProtocol();
+		$rootURL = $protocol . '://' . $serverHost;
+		return $rootURL;
+	}
+
+	/**
+	* @return string The request URL, without the query string for the current request.
+	*/
+	public static function getRequestURLWithoutQueryString() {
+		$requestURL = Utilities::getRequestURLWithQueryString();
+		$qidx = strpos($requestURL, '?');
+		if ($qidx !== false) $requestURL = substr($requestURL, 0, $qidx);
+		return $requestURL;
+	}
+
+	/**
+	* @return string The request URL, with the query string if present, for the current request.
+	*/
+	public static function getRequestURLWithQueryString() {
+		$requestURL = Utilities::getRootURL();
+		if (array_key_exists('REQUEST_URI', $_SERVER)) {
+			$requestURL .= $_SERVER['REQUEST_URI'];
+		}
+		return $requestURL;
+	}
 
 }
 ?>
