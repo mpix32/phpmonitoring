@@ -3,6 +3,27 @@ class_exists('Settings', false) or include('./classes/Settings.class.php');
 class_exists('MySQL', false) or include('./classes/MySQL.class.php');
 class_exists('Utilities', false) or include('./classes/Utilities.class.php');
 
+$settings = Settings::getSettings();
+
+//ip access list check
+if(isset($settings['rssIpACL'])){
+        $ips = explode(',', $settings['rssIpACL']);
+        $acl = false;
+        foreach($ips as $ip){
+                if(Utilities::checkIpToNetwork($_SERVER['REMOTE_ADDR'], $ip)){
+                        $acl=true;
+                        break;
+                };
+        }
+        if($acl===false) {
+		echo('no acl match');
+		exit();
+	}
+}
+
+
+
+
 header('Content-Type: text/xml');
 
 echo('<?xml version="1.0" ?>');

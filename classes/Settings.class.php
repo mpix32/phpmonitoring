@@ -17,6 +17,8 @@ noticeFromEmail = you@mail.com
 smtpServer = localhost
 smtpServerPort = 25
 flushLogsDays = 365
+webIpACL = 10.0.0.0/8,192.168.0.0/16,127.0.0.0/24; cidr form
+rssIpACL = 10.0.0.0/8,192.168.0.0/16,127.0.0.0/24; cidr form
 ";
 
 	public static function getDBConnectionParams() {
