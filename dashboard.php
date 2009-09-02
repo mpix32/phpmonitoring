@@ -18,9 +18,8 @@
 			</tr>
 		<?php
 		$mysql = new MySQL();
-		//this query isn't right - the measured value isnt the latest errord measured value
 		$rs = $mysql->runQuery("
-		select min(l.dateTime) as failureDateTime, l.measuredValue, m.name
+select min(l.dateTime) as failureDateTime, l.measuredValue, m.name
 from monitors m 
         inner join (
                 select max(id) as id, monitorId
@@ -28,13 +27,12 @@ from monitors m
                 where status = 0
                 group by monitorId
         ) le on le.monitorId = m.id
-        inner join logging l on m.id = l.monitorId and le.id < l.id
+        inner join logging l on m.id = l.monitorId and le.id = l.id
 
-where m.currentStatus = 1 and l.status = 1
+where m.currentStatus = 1
 group by m.name
 order by min(l.dateTime) desc limit 10;
 		");
-		//--group by m.name
 		while($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {
 			$whenText = Utilities::timeDiffString($row['failureDateTime']);
 			echo("<tr>");
@@ -71,7 +69,7 @@ from monitors m
 
 where m.currentStatus = 0 and l.status = 0
 group by m.name
-order by min(l.dateTime) desc limit 20;
+order by min(l.dateTime) desc limit 50;
 		");
 		$none=true;
 		while($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {

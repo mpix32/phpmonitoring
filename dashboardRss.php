@@ -35,7 +35,7 @@ from monitors m
 
 where m.currentStatus = 0 and l.status = 0
 group by m.name
-order by min(l.dateTime) desc limit 20;
+order by min(l.dateTime) desc limit 50;
 		");
 		$none=true;
 		while($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {
@@ -43,7 +43,7 @@ order by min(l.dateTime) desc limit 20;
 $whenText = Utilities::timeDiffString($row['failureDateTime']);
 			echo('<item>');
 			echo("\n");
-			echo('<title>'.htmlentities($row['name'].' - '.$row['failureDateTime']).' - ('.$whenText.')</title>');
+			echo('<title>'.htmlentities($row['name'].' - ('.$whenText.') '.$row['failureDateTime']).'</title>');
 			echo("\n");
 			echo('<description>'.htmlentities(strip_tags($row['measuredValue'])).'</description>');
 			echo("\n");
@@ -78,9 +78,9 @@ from monitors m
                 where status = 0
                 group by monitorId
         ) le on le.monitorId = m.id
-        inner join logging l on m.id = l.monitorId and le.id < l.id
+        inner join logging l on m.id = l.monitorId and le.id = l.id
 
-where m.currentStatus = 1 and l.status = 1
+where m.currentStatus = 1
 group by m.name
 order by min(l.dateTime) desc limit 10;
 		");
@@ -88,7 +88,7 @@ order by min(l.dateTime) desc limit 10;
 			$whenText = Utilities::timeDiffString($row['failureDateTime']);
 			echo('<item>');
 			echo("\n");
-			echo('<title>'.htmlentities($row['name'].' - '.$row['failureDateTime']).' - ('.$whenText.')</title>');
+			echo('<title>'.htmlentities($row['name'].' - ('.$whenText.') '.$row['failureDateTime']).'</title>');
 			echo("\n");
 			echo('<description>'.htmlentities(strip_tags($row['measuredValue'])).'</description>');
 			echo("\n");
