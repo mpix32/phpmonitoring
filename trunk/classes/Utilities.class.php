@@ -121,5 +121,15 @@ class Utilities {
 		return $requestURL;
 	}
 
+	public static function checkIpToNetwork($ip, $network) {
+                $ipAddress = explode('/', $network);
+                $networkLong = ip2long($ipAddress[0]);
+                $x = ip2long($ipAddress[1]);
+                $mask =  long2ip($x) == $ipAddress[1] ? $x : 0xffffffff << (32 - $ipAddress[1]);
+                $ipLong = ip2long($ip);
+                return ($ipLong & $mask) == ($networkLong & $mask);
+        }
+
+
 }
 ?>
