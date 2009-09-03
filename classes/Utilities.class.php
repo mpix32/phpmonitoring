@@ -122,14 +122,54 @@ class Utilities {
 	}
 
 	public static function checkIpToNetwork($ip, $network) {
-                $ipAddress = explode('/', $network);
-                $networkLong = ip2long($ipAddress[0]);
-                $x = ip2long($ipAddress[1]);
-                $mask =  long2ip($x) == $ipAddress[1] ? $x : 0xffffffff << (32 - $ipAddress[1]);
-                $ipLong = ip2long($ip);
-                return ($ipLong & $mask) == ($networkLong & $mask);
-        }
+                // The $ip parameter must be a valid, parseable IP address.
+                if (($ipLong = ip2long($ip)) === false) {
+                        return false;
+                }
+                // Break the network address into two pieces, separated by the slash.
+                // there must be exactly two pieces, or it is invalid.
+                $networkPieces = explode('/', $network);
+                if (count($networkPieces) != 2) {
+                        return false;
+                }
+                // Parse the IP address portion of the network address.
+                // If unparseable, it is invalide.
+                if (($networkLong = ip2long($networkPieces[0])) === false) {
+                        return false;
+                }
+                // Count the dots in the netmask portion.  It must be either three (if it's a netmask)
+                // or zero (if it's a most-significant-bits count).  Parse or calculate the netmask
+                // accordingly.
+                $counts = count_chars($networkPieces[1], 1);
+                $idx = ord('.');
+                $dotCount = isset($counts[$idx]) ? $counts[$idx] : 0;
+                if ($dotCount == 3) {
+                        if (($mask = ip2long($networkPieces[1])) === false) {
+                                return false;
+                        }
+                } else if ($dotCount == 0) {
+                        $bitCount = (int)$networkPieces[1];
+                        if ( ($bitCount < 0) || ($bitCount > 32) ) {
+                                // Invalid bit count.
+                                return false;
+                        } else if ($bitCount == 0) {
+                                // << 32 in PHP doesn't seem to do anything; so we work around it here.
+                                $mask = 0;
+                        } else if ($bitCount == 32) {
+                                // Prevent << 0, which effects no change.
+                                $mask = 0xffffffff;
+                        } else {
+                                $mask = (0xffffffff << (32 - $bitCount)) & 0xffffffff;
+                        }
+                } else {
+                        // Invalid dot count in mask.
+                        return false;
+                }
+                // In order for the IP address to be in the network, the biwise-and of the IP address
+                // with the netmask, must equal the bitwise-and of the network address with the netmask.
 
+		return ($ipLong & $mask) == ($networkLong & $mask);
+	}
 
 }
 ?>
