@@ -142,7 +142,7 @@ order by min(l.dateTime) desc limit 50;
 		while($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {
 			$none=false;
 			$whenText = Utilities::timeDiffString($row['failureDateTime']);
-			echo('<li><span>'.$row['name'].'('.$whenText.')</span></li>');
+			echo('<li><span>'.$row['name'].' ('.$whenText.')</span></li>');
 		}
 		if($none) {
 			echo('<li><span>no current issues</span></li>');
@@ -168,7 +168,7 @@ order by min(l.dateTime) desc limit 10;
 		");
 		while($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {
 			$whenText = Utilities::timeDiffString($row['failureDateTime']);
-			echo('<li><span>'.$row['name'].'('.$whenText.')</span></li>');
+			echo('<li><span>'.$row['name'].' ('.$whenText.')</span></li>');
 		}
 		mysql_free_result($rs);
 
