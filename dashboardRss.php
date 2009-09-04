@@ -27,6 +27,8 @@ if(isset($settings['rssIpACL'])){
 header('Content-Type: text/xml');
 
 echo('<?xml version="1.0" ?>');
+//echo('<link rel="apple-touch-icon" href="imgs/logo.png"/>');
+echo("\n");
 echo('<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">');
 echo("\n");
 echo('<channel>');
@@ -64,7 +66,7 @@ order by min(l.dateTime) desc limit 50;
 $whenText = Utilities::timeDiffString($row['failureDateTime']);
 			echo('<item>');
 			echo("\n");
-			echo('<title>'.htmlentities($row['name'].' - ('.$whenText.') '.$row['failureDateTime']).'</title>');
+			echo('<title>'.htmlentities($row['name'].' ('.$whenText.') </title>');
 			echo("\n");
 			echo('<description>'.htmlentities(strip_tags($row['measuredValue'])).'</description>');
 			echo("\n");
