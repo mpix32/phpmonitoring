@@ -115,7 +115,7 @@ div > h1 {
     font-size: 20px;
 }
 </style>
-<link rel="apple-touch-icon" href="imgs/logo.png" />
+<link rel="apple-touch-icon" href="imgs/iphone.png" />
 </head>
 <body onload="setTimeout(function() { window.scrollTo(0, 1) }, 100);">
 <h1>Current Issues</h1>
