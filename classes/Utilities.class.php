@@ -2,14 +2,14 @@
 
 class Utilities {
 
-	public function timeDiffString($timestamp, $detailed=false, $max_detail_levels=8, $precision_level='second', $textDesc=true){
+	public function timeDiffString($timestamp, $now = null, $detailed=false, $max_detail_levels=8, $precision_level='second', $textDesc=true){
 
 		//timestamp - $timestamp - says timestamp but really takes it in yyyy-mm-dd time.
 
 		preg_match('/^(\\d{4})-(\\d{2})-(\\d{2}) (\\d{2}):(\\d{2}):(\\d{2})$/', $timestamp, $matches);
 		$timestamp = mktime($matches[4], $matches[5], $matches[6], $matches[2], $matches[3], $matches[1]);
 
-		$now = time();
+		if($now==null) $now = time();
 
 		#If the difference is positive "ago" - negative "away"
 		($timestamp >= $now) ? $action = 'away' : $action = 'ago';
