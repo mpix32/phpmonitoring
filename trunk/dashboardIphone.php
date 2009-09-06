@@ -21,7 +21,6 @@ if(isset($settings['rssIpACL'])){
 	}
 }
 ?>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -37,7 +36,6 @@ body {
     overflow: hidden;
     -webkit-text-size-adjust: none;
 }
-
 body > h1 {
     box-sizing: border-box;
     margin: 0;
@@ -52,29 +50,6 @@ body > h1 {
     background: #6d84a2 repeat-x;
     border-bottom: 1px solid #2d3642;
 }
-
-.button {
-    position: absolute;
-    top: 8px;
-    right: 6px;
-    -webkit-border-radius: 0;
-    border-width: 0 5px 0 5px;
-    padding: 0;
-    height: 28px;
-    line-height: 28px;
-    font-size: 12px;
-    font-weight: bold;
-    color: #FFFFFF;
-    text-shadow: rgba(0, 0, 0, 0.6) 0px -1px 0;
-    text-decoration: none;
-    background: none;
-}
-
-#homeButton {
-    left: 6px;
-    right: auto;
-    border-width: 0 8px 0 14px;
-}
 body > form,
 body > ul {
     left: 0;
@@ -82,11 +57,9 @@ body > ul {
     margin: 0;
     padding: 0;
 }
-
 body > *[selected="true"] {
     display: block;
 }
-
 body > ul > li {
     margin: 0;
     border-bottom: 1px solid #E0E0E0;
@@ -94,7 +67,6 @@ body > ul > li {
     font-size: 18px;
     list-style: none;
 }
-
 body > ul > li > a {
     display: block;
     padding: 8px 32px 8px 8px;
@@ -121,9 +93,8 @@ div > h1 {
 <h1>Current Issues</h1>
 <ul>
 <?php
-
-		$mysql = new MySQL();
-		$rs = $mysql->runQuery("
+$mysql = new MySQL();
+$rs = $mysql->runQuery("
 select min(l.dateTime) as failureDateTime, l.measuredValue, m.name
 from monitors m 
         inner join (
@@ -153,7 +124,7 @@ echo('<ul>');
 		mysql_free_result($rs);
 		$mysql = new MySQL();
 		$rs = $mysql->runQuery("
-		select min(l.dateTime) as failureDateTime, l.measuredValue, m.name
+select min(l.dateTime) as failureDateTime, l.measuredValue, m.name, m.id
 from monitors m 
         inner join (
                 select max(id) as id, monitorId
@@ -168,9 +139,26 @@ order by min(l.dateTime) desc limit 10;
 		");
 		while($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {
 			$whenText = Utilities::timeDiffString($row['failureDateTime']);
-			echo('<li><span>'.$row['name'].' ('.$whenText.')</span></li>');
+			echo('<li><span>'.$row['name'].' <small>('.$whenText.' for '.getMaxDowntimeDate($row['id'], $row['failureDateTime']).')</small></span></li>');
 		}
 		mysql_free_result($rs);
+
+
+function getMaxDowntimeDate($monitorId, $failureDateTime){
+	$mysql = new MySQL();
+	$rs = $mysql->runQuery("
+select min(dateTime) as dateTime
+from logging
+where monitorId = $monitorId and status = 1 and dateTime > '$failureDateTime';
+");
+	if($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {
+		return Utilities::timeDiffString($failureDateTime, strtotime($row['dateTime']), $detailed=false, $max_detail_levels=8, $precision_level='second', $textDesc=false);
+	}else{
+		return $failureDateTime;
+	}
+	mysql_free_result($rs);
+}
+
 
 ?>
 </ul>
