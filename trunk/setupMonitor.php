@@ -18,13 +18,14 @@ $copy = array_key_exists('cpy', $_GET) ? (int)$_GET['cpy'] : 0;
 $name = array_key_exists('name', $_POST) ? $_POST['name'] : '';
 $frequency = array_key_exists('frequency', $_POST) ? (int)$_POST['frequency'] : 60;		//60 seconds
 $notifyAdmin = array_key_exists('notifyAdmin', $_POST) ? (int)$_POST['notifyAdmin'] : 1;
+$notifyAdminSMS = array_key_exists('notifyAdminSMS', $_POST) ? (int)$_POST['notifyAdminSMS'] : 0;
 $pluginType = array_key_exists('pluginType', $_POST) ? $_POST['pluginType'] : '';
 $pluginInput = array_key_exists('pluginInput', $_POST) ? $_POST['pluginInput'] : '';
 $active = array_key_exists('active', $_POST) ? (int)$_POST['active'] : 1;
 
 $mysql = new MySQL();
 if($copy !=0 && $id !=0) {
-	$mysql->runQuery("insert into monitors(name,frequency,notifyAdmin,currentStatus,pluginType,pluginInput,active) (select name,frequency,notifyAdmin,currentStatus,pluginType,pluginInput,active from monitors where id=$id);");
+	$mysql->runQuery("insert into monitors(name,frequency,notifyAdmin,notifyAdminSMS,currentStatus,pluginType,pluginInput,active) (select name,frequency,notifyAdmin,notifyAdminSMS,currentStatus,pluginType,pluginInput,active from monitors where id=$id);");
 	$id = $mysql->identity;
 	Settings::recalWorkers();
 	header("Location: setupMonitor.php?id=$id");
@@ -34,7 +35,8 @@ if($copy !=0 && $id !=0) {
 	$sql="update monitors 
 		set name ='$name', 
 		frequency=$frequency, 
-		notifyAdmin=$notifyAdmin, 
+		notifyAdmin=$notifyAdmin,
+		notifyAdminSMS=$notifyAdminSMS,  
 		pluginType='$pluginType',
 		pluginInput='".mysql_real_escape_string($pluginInput,$mysql->mysqlCon)."', 
 	 active=$active where id = $id;";
@@ -46,10 +48,11 @@ if($copy !=0 && $id !=0) {
 
 }elseif($name !=''){
 	//insert
-	$sql="insert into monitors (name,frequency,notifyAdmin,currentStatus,pluginType,pluginInput,active) values(
+	$sql="insert into monitors (name,frequency,notifyAdmin,notifyAdminSMS,currentStatus,pluginType,pluginInput,active) values(
 	'$name',
 	$frequency,
 	$notifyAdmin,
+	$notifyAdminSMS,
 	1,
 	'$pluginType',
 	'".mysql_real_escape_string($pluginInput,$mysql->mysqlCon)."',	
@@ -73,6 +76,7 @@ if($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {
 	$name = $row['name'];
 	$frequency = $row['frequency'];
 	$notifyAdmin = $row['notifyAdmin'];
+	$notifyAdminSMS = $row['notifyAdminSMS'];
 	$pluginType = $row['pluginType'];
 	$pluginInput = $row['pluginInput'];
 	$active = $row['active'];
@@ -104,6 +108,7 @@ foreach (scandir('plugins/') as $item) {
 	<tr><td>Monitor Name</td><td><input type="text" size="75" maxlength="100" name="name" value="<?php echo($name); ?>"/></td></tr>
 	<tr><td>Monitoring Frequency(seconds)</td><td><input size="5" type="text" name="frequency" value="<?php echo($frequency); ?>"/></td></tr>
 	<tr><td>Alerts On(1=yes,0=no)</td><td><input size="2" type="text" name="notifyAdmin" value="<?php echo($notifyAdmin); ?>"/></td></tr>
+	<tr><td>SMS Alerts On(1=yes,0=no)</td><td><input size="2" type="text" name="notifyAdminSMS" value="<?php echo($notifyAdminSMS); ?>"/></td></tr>
 	<tr><td>Active(1=yes,0=no)</td><td><input size="2" type="text" name="active" value="<?php echo($active); ?>"/></td></tr>
 	<tr><td>Plugin Data</td><td><textarea rows="15" cols="130" id="pluginInput" name="pluginInput"><?php echo($pluginInput); ?></textarea></td></tr>
 	<tr><td>&nbsp;</td><td><input type="submit" name="submit" value="Save Settings"/></td></tr>

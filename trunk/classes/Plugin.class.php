@@ -18,4 +18,4 @@ abstract class Plugin {
 	*/
 	public abstract function runPlugin($input=array());
 }
-?>
+

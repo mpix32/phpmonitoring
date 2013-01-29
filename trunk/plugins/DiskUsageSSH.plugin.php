@@ -25,7 +25,7 @@ warningAtPercentFilled = 90     ; maximum disk full percentage, above which we i
 	*/
 	public function runPlugin($input=array()) {
 		$output=Plugin::$output;///set defaults for all output
-		$cmd = shell_exec('ssh '.$input['loginUser'].'@'.$input['host'] .' df');
+		$cmd = shell_exec('ssh -o "ConnectTimeout 10" '.$input['loginUser'].'@'.$input['host'] .' df');
 		preg_match_all('/([0-9]+)%/', $cmd, $result);
 		$output['returnContent'] = "<pre>$cmd</pre>";
 		$output['htmlEmail'] = 1;
