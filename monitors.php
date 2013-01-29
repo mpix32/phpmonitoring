@@ -32,24 +32,24 @@ order by active, name;
 while($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {
 ?>
 <tr class="grey" bgcolor="#dddddd">
-<td align="left">&nbsp;&nbsp;<a href="setupMonitor.php?id=<?php echo($row['id']);?>"><?php echo($row['name']);?></a></td>
-<td align="left">&nbsp;&nbsp;<?php echo($row['pluginType']);?></td>
-<td align="left">&nbsp;&nbsp;<?php echo($row['frequency']);?></td>
+<td align="left">&nbsp;&nbsp;<a href="setupMonitor.php?id=<?php echo urlencode($row['id']);?>"><?php echo htmlspecialchars($row['name']);?></a></td>
+<td align="left">&nbsp;&nbsp;<?php echo htmlspecialchars($row['pluginType']);?></td>
+<td align="left">&nbsp;&nbsp;<?php echo htmlspecialchars($row['frequency']);?></td>
 <td align="left">&nbsp;&nbsp;<span class="<?php if($row['currentStatus']==1){echo('green');}else{echo('red');}?>"><?php if($row['currentStatus']==1){echo('OK');}else{echo('ERROR');}?></span></td>
-<td align="left">&nbsp;&nbsp;<?php echo($row['lastRun'])?></td>
-<td align="left">&nbsp;&nbsp;<?php echo($row['lastError'])?></td>
+<td align="left">&nbsp;&nbsp;<?php echo htmlspecialchars($row['lastRun'])?></td>
+<td align="left">&nbsp;&nbsp;<?php echo htmlspecialchars($row['lastError'])?></td>
 <td align="left">&nbsp;&nbsp;<span class="<?php if($row['active']==1){echo('green');}else{echo('red');}?>"><?php if($row['active']==1){echo('Yes');}else{echo('No');}?></span></td>
 <td align="left">&nbsp;&nbsp;<span class="<?php if($row['notifyAdmin']==1){echo('green');}else{echo('red');}?>"><?php if($row['notifyAdmin']==1){echo('Yes');}else{echo('No');}?></span></td>
-<td align="center"><a href="monitorLog.php?id=<?php echo($row['id']);?>">Log</a></td>
+<td align="center"><a href="monitorLog.php?id=<?php echo htmlspecialchars($row['id']);?>">Log</a></td>
 </tr>
-<?
+<?php
 }
 mysql_free_result($rs);
 ?>
 <!--</tbody>-->
 <tfoot class="footer">
 <tr bgcolor="#990000">
-<td colspan="9" align="center"><?php echo(date("F j, Y, g:i a"));?></td>
+<td colspan="9" align="center"><?php echo htmlspecialchars(date("F j, Y, g:i a"));?></td>
 </tr>
 </tfoot>
 </table>
