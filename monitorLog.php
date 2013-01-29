@@ -24,7 +24,7 @@ $rs = $mysql->runQuery("
 select *
 from logging
 where monitorId = $id
-order by dateTime desc limit 250;
+order by dateTime desc limit 2000;
 ");
 while($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {
 ?>
@@ -32,7 +32,7 @@ while($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {
 <td align="left">&nbsp;&nbsp;<?php echo($row['dateTime']);?></td>
 <td align="left">&nbsp;&nbsp;<span class="<?php if($row['status']==1){echo('green');}else{echo('red');}?>"><?php if($row['status']==1){echo('OK');}else{echo('ERROR');}?></span></td>
 <td align="left">&nbsp;&nbsp;<?php echo($row['responseTimeMs']);?></td>
-<td align="left">&nbsp;&nbsp;<?php echo($row['measuredValue'])?></td>
+<td align="left">&nbsp;&nbsp;<?php echo(htmlspecialchars($row['measuredValue']))?></td>
 </tr>
 <?
 }

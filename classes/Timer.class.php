@@ -20,4 +20,3 @@ class Timer {
 		return 1000*($endtime-$this->startTime);
 	}
 }
-?>

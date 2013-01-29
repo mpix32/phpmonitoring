@@ -12,31 +12,35 @@ class_exists('Settings', false) or include('./classes/Settings.class.php');
 class_exists('MySQL', false) or include('./classes/MySQL.class.php');
 class_exists('PHPMailer', false) or include('./classes/Phpmailer.class.php');
 class_exists('Timer', false) or include('./classes/Timer.class.php');
+class_exists('SMS', false) or include('./classes/SMS.class.php');
 
 //load settings
 $settings = Settings::getSettings();
 
-$mysql = new MySQL();
-
 //don't do this everytime so rand  - which probably isnt that bad
 if(rand(1,50)===1){
 	echo("clearing logging table....\n");
+	$mysql = new MySQL();
 	$mysql->runQuery("delete from logging where DATE_ADD(dateTime, INTERVAL ".$settings['flushLogsDays']." DAY) < now();");
+	$mysql->close();
 }
 
 $cronIterations=0;
+$mysql = new MySQL();
 $rs = $mysql->runQuery("select cronIterations from settings;");
 if($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {
 	$cronIterations=$row['cronIterations'];
 }
+$mysql->close();
 
 //this script run's till there is no more work to do
 for ($i = 1; $i <= $cronIterations; $i++) {
 
+	$mysql = new MySQL();
 	//get one at a time only, put a lock on so we only get one
 	$mysql->runQuery("LOCK TABLES monitors WRITE;");
 	//echo("LOCKED\n");
-	$rs = $mysql->runQuery("select id, name, frequency, lastRun, pluginType, pluginInput, notifyAdmin, active from monitors where lastRun = '' or lastRun is null or (now() > DATE_ADD(lastRun, INTERVAL frequency SECOND) and active=1) limit 1;");
+	$rs = $mysql->runQuery("select id, name, frequency, lastRun, pluginType, pluginInput, notifyAdmin, notifyAdminSMS, active from monitors where lastRun = '' or lastRun is null or (now() > DATE_ADD(lastRun, INTERVAL frequency SECOND) and active=1) limit 1;");
 	if($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {
 		$id=$row['id'];
 		$name=$row['name'];
@@ -45,8 +49,10 @@ for ($i = 1; $i <= $cronIterations; $i++) {
 		$pluginType=$row['pluginType'];
 		$pluginInput=$row['pluginInput'];
 		$notifyAdmin=$row['notifyAdmin'];
+		$notifyAdminSMS=$row['notifyAdminSMS'];
 		$mysql->runQuery("update monitors set lastRun=now() where id = $id;");
 		$mysql->runQuery("UNLOCK TABLES;");
+		$mysql->close();
 		//echo("UNLOCKED\n");
 
 		$pluginClass = $pluginType.'Plugin';
@@ -55,7 +61,10 @@ for ($i = 1; $i <= $cronIterations; $i++) {
 		class_exists($pluginClass, false) or include('./plugins/'.$pluginType.'.plugin.php');
 		$input = Settings::parseIniString($pluginInput);
 		eval('$output = '.$pluginClass.'::runPlugin($input);');
-		echo("$pluginType - $id - $name - Started\n");
+		echo(date('Y-m-d H:i:s')."\t$pluginType\t$id\t$name\tStarted\n");
+		
+		$mysql = new MySQL();
+
 		$t = new Timer();
 		$t->start();
 
@@ -104,15 +113,23 @@ for ($i = 1; $i <= $cronIterations; $i++) {
 				$mail->Body = $body;
 			}
 			if(!$mail->Send()) {
-					echo("Mailer Error: " . $mail->ErrorInfo);
+				echo("Mailer Error: " . $mail->ErrorInfo);
 			}
+			if($notifyAdminSMS==1){
+				if(!SMS::send($mail->Subject)){
+					echo("SMS error\n");
+				}else{
+					echo("SMS Sent\n");
+				}
+			}
+
 		}
 		
 		//log output
 		$sql="insert into logging (monitorId,dateTime,responseTimeMs,measuredValue,returnContent,status) values($id,now(),$output[responseTimeMs],'".mysql_real_escape_string($output['measuredValue'],$mysql->mysqlCon)."','".mysql_real_escape_string($output['returnContent'],$mysql->mysqlCon)."',$output[currentStatus]);";
 		$mysql->runQuery($sql);
 		
-		echo("$pluginType - $id - $name - Ended - " . round($t->stop(),0) ." ms \n");	
+		echo(date('Y-m-d H:i:s')."\t$pluginType\t$id\t$name\tEnded\t" . round($t->stop(),0) ." ms \n");	
 
 	}else{
 		$mysql->runQuery("UNLOCK TABLES;");
@@ -122,6 +139,6 @@ for ($i = 1; $i <= $cronIterations; $i++) {
 		//usleep(500*1000);	//500 milliseconds
 	}
 
-	
+	$mysql->close();
+
 }
-?>

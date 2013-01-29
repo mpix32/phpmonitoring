@@ -95,24 +95,15 @@ div > h1 {
 <?php
 $mysql = new MySQL();
 $rs = $mysql->runQuery("
-select min(l.dateTime) as failureDateTime, l.measuredValue, m.name
-from monitors m 
-        inner join (
-                select max(id) as id, monitorId
-                from logging
-                where status = 1
-                group by monitorId
-        ) le on le.monitorId = m.id
-        inner join logging l on m.id = l.monitorId and le.id < l.id
-
-where m.currentStatus = 0 and l.status = 0
-group by m.name
-order by min(l.dateTime) desc limit 50;
+select name, lastError
+from monitors 
+where active = 1 and currentStatus = 0
+order by lastError desc;
 		");
 		$none=true;
 		while($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {
 			$none=false;
-			$whenText = Utilities::timeDiffString($row['failureDateTime']);
+			$whenText = Utilities::timeDiffString($row['lastError']);
 			echo('<li><span>'.$row['name'].' ('.$whenText.')</span></li>');
 		}
 		if($none) {
@@ -124,40 +115,16 @@ echo('<ul>');
 		mysql_free_result($rs);
 		$mysql = new MySQL();
 		$rs = $mysql->runQuery("
-select min(l.dateTime) as failureDateTime, l.measuredValue, m.name, m.id
-from monitors m 
-        inner join (
-                select max(id) as id, monitorId
-                from logging
-                where status = 0
-                group by monitorId
-        ) le on le.monitorId = m.id
-        inner join logging l on m.id = l.monitorId and le.id = l.id
-where m.currentStatus = 1
-group by m.name
-order by min(l.dateTime) desc limit 10;
+select name, lastError
+from monitors 
+where active = 1 and currentStatus = 1
+order by lastError desc limit 10;
 		");
 		while($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {
-			$whenText = Utilities::timeDiffString($row['failureDateTime']);
-			echo('<li><span>'.$row['name'].' <small>('.$whenText.' for '.getMaxDowntimeDate($row['id'], $row['failureDateTime']).')</small></span></li>');
+			$whenText = Utilities::timeDiffString($row['lastError']);
+			echo('<li><span>'.$row['name'].' ('.$whenText.')</span></li>');
 		}
 		mysql_free_result($rs);
-
-
-function getMaxDowntimeDate($monitorId, $failureDateTime){
-	$mysql = new MySQL();
-	$rs = $mysql->runQuery("
-select min(dateTime) as dateTime
-from logging
-where monitorId = $monitorId and status = 1 and dateTime > '$failureDateTime';
-");
-	if($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {
-		return Utilities::timeDiffString($failureDateTime, strtotime($row['dateTime']), $detailed=false, $max_detail_levels=8, $precision_level='second', $textDesc=false);
-	}else{
-		return $failureDateTime;
-	}
-	mysql_free_result($rs);
-}
 
 
 ?>

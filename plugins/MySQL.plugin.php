@@ -4,7 +4,6 @@ class_exists('Plugin', false) or include(dirname(dirname(__FILE__)).'/classes/Pl
 class_exists('Timer', false) or include(dirname(dirname(__FILE__)).'/classes/Timer.class.php');
 
 class MySQLPlugin extends Plugin {
-	//this is default input, prefilled when monitor instance is setup - input is stored in sqllite for the monitor and are only used here
 	public static $rawInput =
 "testQuery = select now();               ; test query which returns some data
 
