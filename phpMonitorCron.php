@@ -12,7 +12,6 @@ class_exists('Settings', false) or include('./classes/Settings.class.php');
 class_exists('MySQL', false) or include('./classes/MySQL.class.php');
 class_exists('PHPMailer', false) or include('./classes/Phpmailer.class.php');
 class_exists('Timer', false) or include('./classes/Timer.class.php');
-class_exists('SMS', false) or include('./classes/SMS.class.php');
 
 //load settings
 $settings = Settings::getSettings();
@@ -40,7 +39,7 @@ for ($i = 1; $i <= $cronIterations; $i++) {
 	//get one at a time only, put a lock on so we only get one
 	$mysql->runQuery("LOCK TABLES monitors WRITE;");
 	//echo("LOCKED\n");
-	$rs = $mysql->runQuery("select id, name, frequency, lastRun, pluginType, pluginInput, notifyAdmin, notifyAdminSMS, active from monitors where lastRun = '' or lastRun is null or (now() > DATE_ADD(lastRun, INTERVAL frequency SECOND) and active=1) limit 1;");
+	$rs = $mysql->runQuery("select id, name, frequency, lastRun, pluginType, pluginInput, notifyAdmin, active from monitors where lastRun = '' or lastRun is null or (now() > DATE_ADD(lastRun, INTERVAL frequency SECOND) and active=1) limit 1;");
 	if($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {
 		$id=$row['id'];
 		$name=$row['name'];
@@ -49,7 +48,6 @@ for ($i = 1; $i <= $cronIterations; $i++) {
 		$pluginType=$row['pluginType'];
 		$pluginInput=$row['pluginInput'];
 		$notifyAdmin=$row['notifyAdmin'];
-		$notifyAdminSMS=$row['notifyAdminSMS'];
 		$mysql->runQuery("update monitors set lastRun=now() where id = $id;");
 		$mysql->runQuery("UNLOCK TABLES;");
 		$mysql->close();
@@ -115,14 +113,6 @@ for ($i = 1; $i <= $cronIterations; $i++) {
 			if(!$mail->Send()) {
 				echo("Mailer Error: " . $mail->ErrorInfo);
 			}
-			if($notifyAdminSMS==1){
-				if(!SMS::send($mail->Subject)){
-					echo("SMS error\n");
-				}else{
-					echo("SMS Sent\n");
-				}
-			}
-
 		}
 		
 		//log output
