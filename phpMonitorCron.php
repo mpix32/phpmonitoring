@@ -58,7 +58,7 @@ for ($i = 1; $i <= $cronIterations; $i++) {
 		//run pluggin
 		class_exists($pluginClass, false) or include('./plugins/'.$pluginType.'.plugin.php');
 		$input = Settings::parseIniString($pluginInput);
-		eval('$output = '.$pluginClass.'::runPlugin($input);');
+		eval('$inst = new '.$pluginClass.'; $output = $inst->runPlugin($input);');
 		echo(date('Y-m-d H:i:s')."\t$pluginType\t$id\t$name\tStarted\n");
 		
 		$mysql = new MySQL();
