@@ -2,7 +2,7 @@
 
 class Utilities {
 
-	public function timeDiffString($timestamp, $now = null, $detailed=false, $max_detail_levels=8, $precision_level='second', $textDesc=true){
+	public static function timeDiffString($timestamp, $now = null, $detailed=false, $max_detail_levels=8, $precision_level='second', $textDesc=true){
 
 		//timestamp - $timestamp - says timestamp but really takes it in yyyy-mm-dd time.
 
